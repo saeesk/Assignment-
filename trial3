@@ -1,0 +1,20 @@
+count.close = function(image , gcol)
+{
+  pixel = 0 
+  col.mat = as.array(image[ , , 1, ])
+  dims = dim(col.mat)
+  #dist = matrix(0, nrow = dims[1] , ncol = dims[2])
+  for( i in 1: dims[1])
+  {
+    for(j in 1 :dims[2])
+    {
+      if(norm(col.mat[i,j, ] - gcol , type = "2") <= 1)
+      {
+        pixel = pixel + 1
+      }
+    }
+  }
+  return(pixel)
+}
+dog = load.image("dog.jpeg")
+count.close(image = dog , gcol = c(1 ,0,0))
