@@ -1,0 +1,23 @@
+#Cut the image into to horizontal halves and swap them . Now plot them one below the other. 
+library(imager)
+hor.cut = function(image)
+{
+  col.mat = as.array(image[ , , 1, ])
+  dims = dim(col.mat)
+  if(dims[2] %% 2 == 0)
+  {
+    low.mat = col.mat[ ,1:dims[2]/2,]
+    up.mat = col.mat[ , (dims[2]/2): dims[2]]
+  }
+  else
+  {
+    low.mat = col.mat[ , 1:(dims[2]+1)/2 ,]
+    up.mat = col.mat[ ,(dims[2]+2)/2:dims[2], ]
+  }
+  par(mfrow =c(3,1))
+  plot(as.cimg(up.mat))
+  plot(as.cimg(low.mat))
+  plot(image)
+}
+dog = load.image("dog.jpeg")
+hor.cut(image = dog)
