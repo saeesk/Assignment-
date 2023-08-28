@@ -1,0 +1,35 @@
+
+
+
+#Q6B 
+
+frep.loop = function( image , fcol , rcol)
+{
+  col.mat = as.array(image[ , , 1, ])
+  dims = dim(col.mat)
+  dist = matrix( 0 , nrow = dims[1] , ncol = dims[2])
+  for ( i in 1 : dims[1])
+  {
+    for ( j in 1 : dims[2])
+    {
+      dist[i , j ] = norm(col.mat - fcol , type = "2")
+    }
+  }
+  ind = which( dist == min(dist) , arr.ind = TRUE)
+  plot(image)
+  if(which.max(rcol) == 1)
+  {
+    points(ind , col = "red" , type = "o" , pch = 16)
+  }
+  else if(which.max(rcol) == 2)
+  {
+    points(ind , col = "green" , type = "o" , pch = 16)
+  }
+  else
+  {
+    points(ind , col = "blue" , type = "o" , pch = 16)
+  }
+  
+}
+dog = load.image("dog.jpeg")
+find.replace(image = dog , fcol = c(1,1,0) , rcol = c(1,0,0))
