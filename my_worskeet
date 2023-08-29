@@ -1,0 +1,338 @@
+#SK's Worksheet with seed as MTH 208A worksheets
+
+#Q1: Rotate the image 180 degrees anticlockwise.Plot the two images one below the other
+#Where do you find such images? 
+library(imager)
+rot.anti.180 = function(image)
+{
+  col.mat = as.array(image[ , , 1, ])
+  rot = col.mat
+  dims = dim(col.mat)
+  for( i in 1 :dims[1])
+  {
+    for(j in 1 : dims[2])
+    {
+      rot[i,j, ] = col.mat[ i , dims[2] + 1 - j , ]  # Don't forget commas 
+    }
+  }
+  par(mfrow = c(2 ,1))
+  plot(image)
+  plot(as.cimg(rot))
+}
+dog = load.image("dog.jpeg")
+rot.anti.180(image = dog)
+#It is water reflection! 
+
+#Q2: FInd the mirror reflection of given image , keep them side by side! 
+mir.reflect = function(image)
+{
+  col.mat = as.array(image[ , , 1, ])
+  rot = col.mat 
+  dims = dim(col.mat)
+  for( i in 1 : dims[1])
+  {
+    for(j in 1: dims[2])
+    {
+      rot[i ,j  , ] = col.mat[dims[1]+1 -i,j ,]
+    }
+  }
+  par(mfrow = c(1 ,2))
+  plot(image , main = "Original")
+  plot(as.cimg(rot), main = "Reflected in mirror")
+}
+dog = load.image("dog.jpeg")
+mir.reflect(image = dog)
+
+
+#Q3:Cut the image in two vertical halves , and swap them . Now plot side by side. 
+vert.cut = function(image)
+{
+  col.mat = as.array(image[ , , 1, ])
+  dims = dim(col.mat)
+  if(dims[1]%%2 == 0)
+  {
+    crop.mat.r = col.mat[1:dims[1]/2 , , ]
+    crop.mat.l = col.mat[(dims[1]/2):dims[1] , , ]
+  }
+  else
+  {
+    crop.mat.r = col.mat[1:(dims[1] + 1)/2 , , ]
+    crop.mat.l = col.mat[((dims[1]+1)/2):dims[1] , , ]
+  }
+  r.img = as.cimg(crop.mat.r)
+  l.img = as.cimg(crop.mat.l)
+  par(mfrow = c(1,2))
+  plot(l.img)
+  plot(r.img)
+}
+dog = load.image("dog.jpeg")
+vert.cut(dog)
+
+#Q4: Cut the image into to horizontal halves and swap them . Now plot them one below the other. 
+library(imager)
+hor.cut = function(image)
+{
+  col.mat = as.array(image[ , , 1, ])
+  dims = dim(col.mat)
+  if(dims[2] %% 2 == 0)
+  {
+    low.mat = col.mat[ ,1:dims[2]/2,]
+    up.mat = col.mat[ , (dims[2]/2): dims[2]]
+  }
+  else
+  {
+    low.mat = col.mat[ , 1:(dims[2]+1)/2 ,]
+    up.mat = col.mat[ ,(dims[2]+2)/2:dims[2], ]
+  }
+  par(mfrow =c(3,1))
+  plot(as.cimg(up.mat))
+  plot(as.cimg(low.mat))
+  plot(image)
+}
+dog = load.image("dog.jpeg")
+hor.cut(image = dog)
+
+#Q5: Convert the given image to 600  X 600 image. Cut it diagonally.
+#Issue : Incorrect number of dimensions ! 
+
+diag.cut = function(image)
+{
+  col.mat = as.array(image[1:600 , 1:600 , 1, ])
+  dims = dim(col.mat) 
+  up.tri = col.mat[ , , 1]
+  low.tri = col.mat[ , , 1]
+  for( i in 1 :dims[1])
+  {
+    for(j in 1 : dims[2])
+    {
+      if(i >= j)
+      {
+        up.tri[i,j] = col.mat[ i , j  ]
+      }
+      else
+      {
+        low.tri[i , j  ]= col.mat[ i , j  ]
+      }
+    }
+  }
+  par(mfrow = c( 1, 2))
+  plot(as.cimg(up.tri))
+  plot(as.cimg(low.tri))
+}
+
+dog = load.image("dog.jpeg")
+diag.cut(image = dog)
+
+
+#Q6: In the given imager image  ,find out the purest colour "fcol" and replce it by
+#given "rcol". Do this by :
+#Q6A) Without using for loops 
+#Q6B) With for loops  
+
+#Q6A
+find.replace = function( image , fcol , rcol)
+{
+  col.mat = as.array(image[ , , 1, ])
+  dims = dim(col.mat)
+  dist = apply(col.mat , c(1,2) , function(s) norm(s - fcol , type = "2"))
+  ind = which(dist == min(dist) , arr.ind = TRUE)
+  plot(image)
+  if(which.max(rcol) == 1)
+  {
+    points(ind , col = "red" , type = "o" , pch = 16)
+  }
+  else if(which.max(rcol) == 2)
+  {
+    points(ind , col = "green" , type = "o" , pch = 16)
+  }
+  else
+  {
+    points(ind , col = "blue" , type = "o" , pch = 16)
+  }
+}
+dog = load.image("dog.jpeg")
+find.replace(image = dog , fcol = c(1,1,0) , rcol = c(0,0,1))
+
+
+
+#Q6B 
+
+frep.loop = function( image , fcol , rcol)
+{
+  col.mat = as.array(image[ , , 1, ])
+  dims = dim(col.mat)
+  dist = matrix( 0 , nrow = dims[1] , ncol = dims[2])
+  for ( i in 1 : dims[1])
+  {
+    for ( j in 1 : dims[2])
+    {
+      dist[i , j ] = norm(col.mat - fcol , type = "2")
+    }
+  }
+  ind = which( dist == min(dist) , arr.ind = TRUE)
+  plot(image)
+  if(which.max(rcol) == 1)
+  {
+    points(ind , col = "red" , type = "o" , pch = 16)
+  }
+  else if(which.max(rcol) == 2)
+  {
+    points(ind , col = "green" , type = "o" , pch = 16)
+  }
+  else
+  {
+    points(ind , col = "blue" , type = "o" , pch = 16)
+  }
+  
+}
+dog = load.image("dog.jpeg")
+frep.loop(image = dog , fcol = c(1,1,0) , rcol = c(1,0,0))
+
+
+
+
+
+#Q7: In the given imager image  ,find out the least  pure colour "fcol" and replce it by
+#given "rcol". Do this by :
+#Q6A) Without using for loops 
+#Q6B) With for loops 
+ 
+ 
+
+
+#Q8 Find no of pixels which are close to given colour : ie norm( x - gcol) <= 0.5, 
+#where x is the colour vector of array .  
+
+count.close = function(image , gcol)
+{
+  pixel = 0 
+  col.mat = as.array(image[ , , 1, ])
+  dims = dim(col.mat)
+  #dist = matrix(0, nrow = dims[1] , ncol = dims[2])
+  for( i in 1: dims[1])
+  {
+    for(j in 1 :dims[2])
+    {
+      if(norm(col.mat[i,j, ] - gcol , type = "2") <= 1)
+      {
+        pixel = pixel + 1
+      }
+    }
+  }
+  return(pixel)
+}
+dog = load.image("dog.jpeg")
+count.close(image = dog , gcol = c(1 ,0,0))
+
+
+#Q9 Expand the small image : back to its normal sixe image 
+# Q9A) 60 X 60 to 600 X 600
+# Q9B) 300 X 300 to 600 X 600
+# Q9C) n X n to 600 X 600
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#Q9 Compress 600 X 600 image to n X n  size image
+library(imager)
+compress = function(image , n)
+{
+  col.mat = as.array(image[ , , 1, ])
+  col.mat  = col.mat[1: 600 , 1:600 , ]
+  averaging = numeric(length = 3)
+  reduce = array( 0 , dim = c(n , n , 3))
+  r = 600/n
+  for(i in 1 : n )
+  {
+    for( j in 1: n )
+    {
+      ind1 = (r*(i-1)+1) :(r*i)
+      ind2 = (r*(j-1)+1) :(r*j)
+      
+      averaging[1]= mean(col.mat[ind1 ,ind2 ,1])
+      averaging[2]= mean(col.mat[ind1 ,ind2 ,2])
+      averaging[3]= mean(col.mat[ind1 ,ind2 ,3])
+      
+      reduce[ i , j , ] = averaging
+    }
+  }
+  reduce = as.cimg(reduce)
+  par(mfrow = c(1,2))
+  plot(image)
+  plot(reduce)
+}
+dog = load.image("dog.jpeg")
+compress(image = dog , n = 300)
+
+
+#
+compress = function(image , n )
+{
+  col.mat <- as.array(image[, ,1, ])
+  col.mat <- col.mat[1:600, 1:600, ]
+  
+  reduce <- array(0, dim = c( n , n , 3))
+  red.dims <- dim(reduce)
+  r = 600/n 
+  # I will take an average of the 2 by 2 pixels
+  # and then assign the average value to the reduce
+  averaging <- rep(0,3)
+  for(i in 1:red.dims[1])
+  {
+    for(j in 1:red.dims[2])
+    {
+      ind1 <- (r*(i-1) + 1): (r*i)  #This is choosing the box 
+      ind2 <- (r*(j-1) + 1): (r*j)
+      
+      # taking the average rbg in the 2 by 2 area
+      averaging[1] <- mean(col.mat[ind1, ind2, 1])
+      averaging[2] <- mean(col.mat[ind1, ind2, 2])
+      averaging[3] <- mean(col.mat[ind1, ind2, 3])
+      
+      reduce[i, j, ] <- averaging
+    }
+  }
+  par(mfrow = c(1,2))
+  plot(image , main = "Original")
+  plot(as.cimg(reduce) , main = "Compressed")
+}
+dog = load.image("dog.jpeg")
+compress(image = dog , n = 30)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#Q10 Rotate (once again , it's a drill!) the image in : 
+#A) 90 deg clockwise
+#B) 90 deg anticlockwise
+#C) 180 deg 
