@@ -1,0 +1,44 @@
+#
+compress = function(image , n )
+{
+  col.mat <- as.array(image[, ,1, ])
+  col.mat <- col.mat[1:600, 1:600, ]
+  
+  reduce <- array(0, dim = c( n , n , 3))
+  red.dims <- dim(reduce)
+  r = 600/n 
+  # I will take an average of the 2 by 2 pixels
+  # and then assign the average value to the reduce
+  averaging <- rep(0,3)
+  for(i in 1:red.dims[1])
+  {
+    for(j in 1:red.dims[2])
+    {
+      ind1 <- (r*(i-1) + 1): (r*i)  #This is choosing the box 
+      ind2 <- (r*(j-1) + 1): (r*j)
+      
+      # taking the average rbg in the 2 by 2 area
+      averaging[1] <- mean(col.mat[ind1, ind2, 1])
+      averaging[2] <- mean(col.mat[ind1, ind2, 2])
+      averaging[3] <- mean(col.mat[ind1, ind2, 3])
+      
+      reduce[i, j, ] <- averaging
+    }
+  }
+  par(mfrow = c(1,2))
+  plot(image , main = "Original")
+  plot(as.cimg(reduce) , main = "Compressed")
+}
+dog = load.image("dog.jpeg")
+compress(image = dog , n = 30)
+
+
+
+
+
+
+
+
+
+
+
