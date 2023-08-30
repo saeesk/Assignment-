@@ -1,0 +1,32 @@
+
+#Diagonal fill up 
+up.dia = function(image)
+{
+  col.mat = as.array(image[ , , 1,  ])
+  col.mat  = col.mat[1: 600 , 1:600 , ]
+  dims = dim(col.mat)
+  upper = col.mat
+  lower = col.mat
+  for( i in 1: dims[1])
+  {
+    for( j in 1:dims[2])
+    {
+      
+      if(i > j)
+      {
+        
+        upper[i , j , ] = c(1 ,1,1)
+      }
+      else
+      {
+        lower[i,j, ] = c(1 , 1,1 )
+      }
+    }
+  }
+  #plot(image)
+  par(mfrow = c(1,2))
+  plot(as.cimg(upper))
+  plot(as.cimg(lower))
+}
+dog = load.image("dog.jpeg")
+up.dia(image = dog)
