@@ -1,25 +1,25 @@
 library(imager)
-prop.color = function( img ,col)
+prop.color = function( img ,col)  #Take the input
 {
-  col.mat = as.array(img[ , , 1, ])
+  col.mat = as.array(img[ , , 1, ]) #Convert image to array
   pixel = 0 
-  dims = dim(col.mat)
+  dims = dim(col.mat)  # Get dimensions 
   for( i in 1:dims[1])
   {
-    for( j in 1:dims[2])
+    for( j in 1:dims[2])      #The double for loop to access every every element of the array 
     {
-      dist = norm(col.mat[ i ,j , ] - col , type = "2")
+      dist = norm(col.mat[ i ,j , ] - col , type = "2")  #Find the distance to the colour 
       if(dist <= 0.5)
       {
-        pixel = pixel + 1
+        pixel = pixel + 1   #Count the pixels which satisfy the condition 
       }
     }
   }
-  prop = pixel/(dims[1]*dims[2])
-  return(prop)
+  prop = pixel/(dims[1]*dims[2])  # Get the porportion
+  return(prop)   #Return the output 
 }
 
 
-dog = load.image("dog.jpeg")
-prop.color(dog , c(1 ,1,1))
+dog = load.image("dog.jpeg")   
+prop.color(dog , c(1 ,1,1))   #Test case 
 
