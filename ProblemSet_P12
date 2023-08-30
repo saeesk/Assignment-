@@ -1,0 +1,20 @@
+library(rbenchmark)
+f1 = function()
+{
+  A = matrix( 1 , nrow = 1000 , ncol = 100 )
+  colnorm = numeric(length = 100)
+  for( j  in 1 : 100)
+  {
+    colnorm[j] = norm(A[ , j] , type = "2")
+  }
+  return(colnorm)
+}
+
+f2 = function()
+{
+  A = matrix( 1 , nrow = 1000 , ncol = 100 )
+  colnorm = sapply( 1:100, function(k) norm(A[ ,k] , type="2") )
+  return(colnorm)
+}
+
+benchmark( f1() , f2() , replications = 100)
