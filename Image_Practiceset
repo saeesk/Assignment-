@@ -1,0 +1,61 @@
+#P1
+prop.color = function(img , col)
+{
+  col.mat = as.array(img[ , , 1, ])
+  pixel = 0
+  dims = dim(col.mat)
+  for( i in 1:dims[1])
+  {
+    for( j in 1:dims[2])
+    {
+      if( norm(col.mat[ i , j , ] - col , "2") < 0.5 )
+      {
+        pixel = pixel +1
+      }
+    }
+  }
+  return(pixel/(dims[1]*dims[2]))
+}
+
+dog = load.image("dog.jpeg")
+prop.color(dog , c(0.9,0.2,0.4))
+
+
+#P2
+mirror = function(image)
+{
+  col.mat = as.array(image[ , , 1, ])
+  ref = col.mat 
+  dims = dim(col.mat)
+  for(i in 1:dims[1])
+  {
+    for( j in 1:dims[2])
+    {
+      ref[ i , j , ] = col.mat[dims[1]+1 - i , j, ]
+    }
+  }
+  plot(as.cimg(ref))
+}
+
+mirror(dog)
+
+
+
+
+
+#P3
+dog = load.image("dog.jpeg")
+col.mat = as.array(dog[ , , 1, ])
+dims = dim(col.mat)
+for( i in 1:dims[1])
+{
+  for( j in 1:dims[2])
+  {
+    color = col.mat[i , j , ]
+    if(prod(color < c(0.1,0.1,0.1))==1)
+    {
+      col.mat[ i ,j , ] = c(0,0,0)
+    }
+  }
+}
+plot(as.cimg(col.mat))
