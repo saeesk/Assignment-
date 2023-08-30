@@ -1,5 +1,5 @@
 library(rbenchmark)
-f1 = function()
+f1 = function()     #Calculating norms of columns by for loop 
 {
   A = matrix( 1 , nrow = 1000 , ncol = 100 )
   colnorm = numeric(length = 100)
@@ -10,11 +10,11 @@ f1 = function()
   return(colnorm)
 }
 
-f2 = function()
+f2 = function()   #Calculating norms of columns by sapply()
 {
   A = matrix( 1 , nrow = 1000 , ncol = 100 )
   colnorm = sapply( 1:100, function(k) norm(A[ ,k] , type="2") )
   return(colnorm)
 }
 
-benchmark( f1() , f2() , replications = 100)
+benchmark( f1() , f2() , replications = 100)   #Checking which of the two functions is faster - sapply() is faster 
