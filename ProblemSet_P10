@@ -1,0 +1,20 @@
+#Problem 10 
+mirror = function(image)
+{
+  col.mat = as.array(image[ , , 1, ])
+  ref.mat = col.mat
+  dims = dim(col.mat)
+  for( i in 1:dims[1])
+  {
+    for( j in 1:dims[2])
+    {
+      ref.mat[ i , j , ] = col.mat[dims[1]+ 1 - i , j , ]
+    }
+  }
+  par(mfrow = c(1,2))
+  plot(image , main = "Original Image")
+  plot(as.cimg(ref.mat) , main = "Reflected Image")
+}
+
+dog = load.image("dog.jpeg")
+mirror(dog)
