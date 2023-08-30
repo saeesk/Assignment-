@@ -1,0 +1,21 @@
+find.replace = function(image ,fcol , rcol)
+{
+  col.mat = as.array(image[ , , 1, ])
+  dims = dim(col.mat)
+  for( i in 1:dims[1])
+  {
+    for( j in 1:dims[2])
+    {
+      check.col = col.mat[i , j , ]
+      if(prod(check.col >= fcol) == 0)
+      {
+        col.mat[ i , j , ] = rcol
+      }
+    }
+  }
+  par(mfrow = c(1,2))
+  plot(image , main ="Original")
+  plot(as.cimg(col.mat) , main = "Replaced")
+}
+dog = load.image("dog.jpeg")
+find.replace(dog , c(0.1,0.1,0.1) , c(0,0,0))
