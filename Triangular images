@@ -1,0 +1,27 @@
+
+tri.img = function(image)
+{
+  col.mat = as.array(image[ , , 1, ])
+  up.tri = col.mat 
+  low.tri = col.mat 
+  dims = dim(col.mat)
+  for( i in 1:dims[1])
+  {
+    for( j in 1:dims[2])
+    {
+      if( i >j)
+      {
+        low.tri[ dims[1]+1 -i, j , ] = c(1,1,1) 
+      }
+      else
+      {
+        up.tri[dims[1]+1 -i, j , ] = c(1,1,1)
+      }
+    }
+  }
+  par(mfrow = c(1,2))
+  plot(as.cimg(up.tri) , main = "Upper triangular image")
+  plot(as.cimg(low.tri) , main = "Lower triangular image")
+  
+}
+tri.img(image = dog)
