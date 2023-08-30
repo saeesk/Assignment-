@@ -1,0 +1,25 @@
+library(imager)
+prop.color = function( img ,col)
+{
+  col.mat = as.array(img[ , , 1, ])
+  pixel = 0 
+  dims = dim(col.mat)
+  for( i in 1:dims[1])
+  {
+    for( j in 1:dims[2])
+    {
+      dist = norm(col.mat[ i ,j , ] - col , type = "2")
+      if(dist <= 0.5)
+      {
+        pixel = pixel + 1
+      }
+    }
+  }
+  prop = pixel/(dims[1]*dims[2])
+  return(prop)
+}
+
+
+dog = load.image("dog.jpeg")
+prop.color(dog , c(1 ,1,1))
+
