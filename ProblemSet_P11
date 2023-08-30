@@ -1,21 +1,21 @@
-find.replace = function(image ,fcol , rcol)
+find.replace = function(image ,fcol , rcol)   #Get input 
 {
-  col.mat = as.array(image[ , , 1, ])
-  dims = dim(col.mat)
+  col.mat = as.array(image[ , , 1, ])    #Make image into array 
+  dims = dim(col.mat)    #Get dimensions 
   for( i in 1:dims[1])
   {
-    for( j in 1:dims[2])
+    for( j in 1:dims[2])   #Double for loop to acces every element 
     {
       check.col = col.mat[i , j , ]
-      if(prod(check.col >= fcol) == 0)
+      if(prod(check.col >= fcol) == 0)   #Check if every element of the pixel color is less than given color 
       {
-        col.mat[ i , j , ] = rcol
+        col.mat[ i , j , ] = rcol        #If yes , then , replace it by rcol 
       }
     }
   }
   par(mfrow = c(1,2))
   plot(image , main ="Original")
-  plot(as.cimg(col.mat) , main = "Replaced")
+  plot(as.cimg(col.mat) , main = "Replaced")    #Plot the images 
 }
 dog = load.image("dog.jpeg")
-find.replace(dog , c(0.1,0.1,0.1) , c(0,0,0))
+find.replace(dog , c(0.1,0.1,0.1) , c(0,0,0))   # Test case 
